@@ -5,56 +5,7 @@
   <title>Expense Tracker</title>
 </head>
 <body>
-  <h1>Expense Tracker</h1>
-
-  <form id="expenseForm">
-    <label>
-      Type:
-      <select id="type">
-        <option value="true">Income</option>
-        <option value="false">Expense</option>
-      </select>
-    </label>
-    <label>
-      Amount:
-      <input type="number" id="amount" step="0.01" required>
-    </label>
-    <button type="submit">Add</button>
-  </form>
-
-  <h2>Records</h2>
-  <ul id="records"></ul>
-
-  <script>
-    const form = document.getElementById('expenseForm')
-    const recordsList = document.getElementById('records')
-
-    async function fetchRecords() {
-      const res = await fetch('/api/list')
-      const data = await res.json()
-      recordsList.innerHTML = ''
-      data.forEach(record => {
-        const li = document.createElement('li')
-        li.textContent = `${record.gains ? 'Income' : 'Expense'}: $${record.amount} (ID: ${record.id})`
-        recordsList.appendChild(li)
-      })
-    }
-
-    form.addEventListener('submit', async e => {
-      e.preventDefault()
-      const gains = form.type.value === 'true'
-      const amount = parseFloat(form.amount.value)
-      await fetch('/api/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gains, amount })
-      })
-      form.amount.value = ''
-      fetchRecords()
-    })
-
-    // initial load
-    fetchRecords()
-  </script>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
