@@ -17,6 +17,10 @@
       <button type="submit">Add</button>
     </form>
 
+    <div v-if="error" style="color:red; margin-top:10px;">
+      Error: {{ error }}
+    </div>
+
     <h2>Records</h2>
     <ul>
       <li v-for="record in records" :key="record.id">
@@ -34,25 +38,44 @@ export default {
     const type = ref(true)
     const amount = ref(0)
     const records = ref([])
+    const error = ref('')
 
     async function fetchRecords() {
-      const res = await fetch('/api/list')
-      records.value = await res.json()
+      try {
+        const res = await fetch('/api/list')
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`)
+        records.value = await res.json()
+        error.value = ''
+      } catch (err) {
+        console.error('Error fetching records:', err)
+        error.value = err.message
+      }
     }
 
     async function addExpense() {
-      await fetch('/api/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gains: type.value, amount: amount.value })
-      })
-      amount.value = 0
-      fetchRecords()
+      try {
+        const res = await fetch('/api/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gains: type.value, amount: amount.value })
+        })
+        if (!res.ok) {
+          const errData = await res.json()
+          throw new Error(errData.error || `HTTP ${res.status}: ${res.statusText}`)
+        }
+        await res.json()
+        amount.value = 0
+        error.value = ''
+        fetchRecords()
+      } catch (err) {
+        console.error('Error adding expense:', err)
+        error.value = err.message
+      }
     }
 
     onMounted(fetchRecords)
 
-    return { type, amount, records, addExpense }
+    return { type, amount, records, addExpense, error }
   }
 }
 </script>
