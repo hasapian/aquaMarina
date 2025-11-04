@@ -24,6 +24,10 @@
     <h2>Totals</h2>
     <p>Total Income: €{{ totals.totalIncome.toFixed(2) }}</p>
     <p>Total Expenses: €{{ totals.totalExpenses.toFixed(2) }}</p>
+    <p>
+      Net: €{{ (totals.totalIncome - totals.totalExpenses).toFixed(2) }}
+      — <strong>{{ totals.totalIncome >= totals.totalExpenses ? 'You win!' : 'You lose!' }}</strong>
+    </p>
 
     <h2>Monthly Sums (Last 2 Months)</h2>
     <div v-for="(sum, month) in totals.monthlySums" :key="month">
@@ -31,11 +35,16 @@
     </div>
 
     <h2>Records (Last 2 Months)</h2>
-    <ul>
-      <li v-for="record in records" :key="record.id">
-        {{ record.gains ? 'Income' : 'Expense' }}: €{{ record.amount.toFixed(2) }} ({{ new Date(record.created_at).toLocaleDateString() }})
-      </li>
-    </ul>
+    <div class="months-container">
+      <div v-for="(recordsList, month) in monthlyRecords" :key="month" class="month-column">
+        <h3>{{ month }}</h3>
+        <ul>
+          <li v-for="record in recordsList" :key="record.id">
+            {{ record.gains ? 'Income' : 'Expense' }}: €{{ record.amount.toFixed(2) }} ({{ new Date(record.created_at).toLocaleDateString() }})
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,12 +55,12 @@ export default {
   setup() {
     const type = ref(true)
     const amount = ref(0)
-    const records = ref([])
     const totals = ref({
       totalIncome: 0,
       totalExpenses: 0,
       monthlySums: {}
     })
+    const monthlyRecords = ref({})
     const error = ref('')
 
     async function fetchRecords() {
@@ -59,8 +68,8 @@ export default {
         const res = await fetch('/api/list')
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`)
         const data = await res.json()
-        records.value = data.records
         totals.value = data.totals
+        monthlyRecords.value = data.monthlyRecords
         error.value = ''
       } catch (err) {
         console.error('Error fetching records:', err)
@@ -91,7 +100,21 @@ export default {
 
     onMounted(fetchRecords)
 
-    return { type, amount, records, totals, error, addExpense }
+    return { type, amount, totals, monthlyRecords, error, addExpense }
   }
 }
 </script>
+
+<style>
+.months-container {
+  display: flex;
+  gap: 2rem;
+}
+
+.month-column {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 6px;
+}
+</style>

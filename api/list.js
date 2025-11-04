@@ -15,24 +15,23 @@ export default async function handler(req, res) {
     if (error) return res.status(500).json({ error: error.message })
 
     const now = new Date()
-    const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-
-    // Initialize totals and monthly sums
-    let totalIncome = 0
-    let totalExpenses = 0
-    let monthlySums = {}
-
     const months = [
       new Date(now.getFullYear(), now.getMonth() - 1, 1),
       new Date(now.getFullYear(), now.getMonth(), 1)
     ]
 
+    let totalIncome = 0
+    let totalExpenses = 0
+    let monthlySums = {}
+    let monthlyRecords = {}
+
+    // Prepare keys for last 2 months
     months.forEach(d => {
       const key = d.toLocaleString('default', { month: 'long', year: 'numeric' })
       monthlySums[key] = { income: 0, expenses: 0 }
+      monthlyRecords[key] = []
     })
 
-    // Compute totals and monthly sums
     records.forEach(r => {
       const amount = parseFloat(r.amount)
       const date = new Date(r.created_at)
@@ -42,17 +41,18 @@ export default async function handler(req, res) {
 
       const monthKey = date.toLocaleString('default', { month: 'long', year: 'numeric' })
       if (monthKey in monthlySums) {
-        if (r.gains) monthlySums[monthKey].income += amount
-        else monthlySums[monthKey].expenses += amount
+        if (r.gains) {
+          monthlySums[monthKey].income += amount
+        } else {
+          monthlySums[monthKey].expenses += amount
+        }
+        monthlyRecords[monthKey].push(r)
       }
     })
 
-    // Filter records to last 2 months only
-    const filteredRecords = records.filter(r => new Date(r.created_at) >= firstDayLastMonth)
-
     res.status(200).json({
-      records: filteredRecords,
-      totals: { totalIncome, totalExpenses, monthlySums }
+      totals: { totalIncome, totalExpenses, monthlySums },
+      monthlyRecords
     })
   } catch (err) {
     res.status(500).json({ error: err.message })
