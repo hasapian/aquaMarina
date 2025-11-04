@@ -92,6 +92,10 @@ body {
   gap: 1.2rem;
 }
 
+.amount {
+  white-space: nowrap;
+}
+
 .month-column {
   width: 100%;
   min-width: 0;
