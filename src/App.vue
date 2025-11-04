@@ -63,6 +63,7 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue'
+import './styles.css'  /* import the external CSS */
 
 export default {
   setup() {
@@ -123,66 +124,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 1rem;
-}
-
-.form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.form label {
-  flex: 1 1 150px;
-}
-
-.form input,
-.form select,
-.form button {
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-.error {
-  color: red;
-  margin-bottom: 1rem;
-}
-
-.months-container {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.month-column {
-  flex: 1 1 300px;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-}
-
-.monthly-sum {
-  margin-top: 1rem;
-  font-weight: bold;
-}
-
-.combined-net {
-  margin-top: 2rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-/* Mobile adjustments */
-@media (max-width: 700px) {
-  .months-container {
-    flex-direction: column;
-  }
-}
-</style>
