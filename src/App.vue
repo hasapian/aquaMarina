@@ -26,10 +26,10 @@
     <!-- Totals -->
     <div class="totals">
       <h2>Totals</h2>
-      <p>Total Income: €{{ totals.totalIncome.toFixed(2) }}</p>
-      <p>Total Expenses: €{{ totals.totalExpenses.toFixed(2) }}</p>
+      <p>Total Income: {{ totals.totalIncome.toFixed(2) }}€</p>
+      <p>Total Expenses: {{ totals.totalExpenses.toFixed(2) }}€</p>
       <p>
-        Net: €{{ (totals.totalIncome - totals.totalExpenses).toFixed(2) }}
+        Net: {{ (totals.totalIncome - totals.totalExpenses).toFixed(2) }}€
         — <strong :style="{ color: totals.totalIncome >= totals.totalExpenses ? 'green' : 'red' }">
           {{ totals.totalIncome >= totals.totalExpenses ? 'You win!' : 'You lose!' }}
         </strong>
@@ -43,15 +43,15 @@
         <h3>{{ month }}</h3>
         <ul>
           <li v-for="record in recordsList" :key="record.id">
-            {{ record.gains ? 'Income' : 'Expense' }}: €{{ record.amount.toFixed(2) }} ({{ new Date(record.created_at).toLocaleDateString() }})
+            {{ record.gains ? 'Income' : 'Expense' }}: {{ record.amount.toFixed(2) }}€ ({{ new Date(record.created_at).toLocaleDateString() }})
           </li>
         </ul>
         <div class="monthly-sum">
           <p>
-            Income: €{{ totals.monthlySums[month].income.toFixed(2) }}, 
-            Expenses: €{{ totals.monthlySums[month].expenses.toFixed(2) }}, 
+            Income: {{ totals.monthlySums[month].income.toFixed(2) }}€, 
+            Expenses: {{ totals.monthlySums[month].expenses.toFixed(2) }}€, 
             Net: <span :style="{ color: totals.monthlySums[month].income >= totals.monthlySums[month].expenses ? 'green' : 'red' }">
-              €{{ (totals.monthlySums[month].income - totals.monthlySums[month].expenses).toFixed(2) }}
+              {{ (totals.monthlySums[month].income - totals.monthlySums[month].expenses).toFixed(2) }}€
             </span>
           </p>
         </div>
@@ -62,7 +62,7 @@
     <div class="combined-net">
       <strong>Combined Net (Last 2 Months): </strong>
       <span :style="{ color: combinedNet >= 0 ? 'green' : 'red' }">
-        €{{ combinedNet.toFixed(2) }} — {{ combinedNet >= 0 ? 'You win!' : 'You lose!' }}
+        {{ combinedNet.toFixed(2) }}€ — {{ combinedNet >= 0 ? 'You win!' : 'You lose!' }}
       </span>
     </div>
   </div>
