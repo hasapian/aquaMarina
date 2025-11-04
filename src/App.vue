@@ -21,12 +21,36 @@
       Error: {{ error }}
     </div>
 
-    <h2>Records</h2>
-    <ul>
-      <li v-for="record in records" :key="record.id">
-        {{ record.gains ? 'Income' : 'Expense' }}: ${{ record.amount }} (ID: {{ record.id }})
-      </li>
-    </ul>
+    <h2>Totals</h2>
+    <p>Total Income: €{{ totals.totalIncome.toFixed(2) }}</p>
+    <p>Total Expenses: €{{ totals.totalExpenses.toFixed(2) }}</p>
+    <p>
+      Net: €{{ (totals.totalIncome - totals.totalExpenses).toFixed(2) }}
+      — <strong :style="{ color: totals.totalIncome >= totals.totalExpenses ? 'green' : 'red' }">
+        {{ totals.totalIncome >= totals.totalExpenses ? 'You win!' : 'You lose!' }}
+      </strong>
+    </p>
+
+    <h2>Records (Last 2 Months)</h2>
+    <div class="months-container">
+      <div v-for="(recordsList, month) in monthlyRecords" :key="month" class="month-column">
+        <h3>{{ month }}</h3>
+        <ul>
+          <li v-for="record in recordsList" :key="record.id">
+            {{ record.gains ? 'Income' : 'Expense' }}: €{{ record.amount.toFixed(2) }} ({{ new Date(record.created_at).toLocaleDateString() }})
+          </li>
+        </ul>
+        <div class="monthly-sum">
+          <p>
+            Income: €{{ totals.monthlySums[month].income.toFixed(2) }}, 
+            Expenses: €{{ totals.monthlySums[month].expenses.toFixed(2) }}, 
+            Net: <span :style="{ color: totals.monthlySums[month].income >= totals.monthlySums[month].expenses ? 'green' : 'red' }">
+              €{{ (totals.monthlySums[month].income - totals.monthlySums[month].expenses).toFixed(2) }}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -37,14 +61,21 @@ export default {
   setup() {
     const type = ref(true)
     const amount = ref(0)
-    const records = ref([])
+    const totals = ref({
+      totalIncome: 0,
+      totalExpenses: 0,
+      monthlySums: {}
+    })
+    const monthlyRecords = ref({})
     const error = ref('')
 
     async function fetchRecords() {
       try {
         const res = await fetch('/api/list')
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`)
-        records.value = await res.json()
+        const data = await res.json()
+        totals.value = data.totals
+        monthlyRecords.value = data.monthlyRecords
         error.value = ''
       } catch (err) {
         console.error('Error fetching records:', err)
@@ -75,7 +106,26 @@ export default {
 
     onMounted(fetchRecords)
 
-    return { type, amount, records, addExpense, error }
+    return { type, amount, totals, monthlyRecords, error, addExpense }
   }
 }
 </script>
+
+<style>
+.months-container {
+  display: flex;
+  gap: 2rem;
+}
+
+.month-column {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.monthly-sum {
+  margin-top: 1rem;
+  font-weight: bold;
+}
+</style>
