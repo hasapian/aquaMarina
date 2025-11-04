@@ -116,7 +116,6 @@ body {
 }
 
 .month-column li {
-  padding: 0.5rem 0;
   font-size: 1.15rem;
   display: flex;
   justify-content: space-between;
