@@ -1,18 +1,18 @@
-/* Container */
+/* === GENERAL CONTAINER === */
 .container {
   max-width: 100%;
-  padding: 1rem;
+  padding: 1.2rem;
   font-family: Arial, sans-serif;
-  font-size: 1.2rem; /* larger base font */
+  font-size: 1.2rem; /* bigger base font */
   line-height: 1.6;
 }
 
-/* Form */
+/* === FORM === */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem; /* more spacing */
-  margin-bottom: 1.2rem;
+  gap: 1rem; /* more spacing */
+  margin-bottom: 1.5rem;
 }
 
 .form label {
@@ -24,8 +24,8 @@
 .form input,
 .form select,
 .form button {
-  padding: 0.8rem; /* bigger inputs/buttons */
-  font-size: 1.2rem; /* bigger text */
+  padding: 0.8rem;
+  font-size: 1.2rem;
   width: 100%;
   box-sizing: border-box;
   border-radius: 6px;
@@ -44,14 +44,14 @@
   background-color: #2980b9;
 }
 
-/* Error */
+/* === ERROR MESSAGES === */
 .error {
   color: red;
+  font-size: 1.15rem;
   margin-bottom: 1rem;
-  font-size: 1.1rem;
 }
 
-/* Totals & Combined net */
+/* === TOTALS & COMBINED NET === */
 .totals p,
 .combined-net {
   margin: 0.5rem 0;
@@ -59,11 +59,11 @@
   font-weight: bold;
 }
 
-/* Monthly records */
+/* === MONTHLY RECORDS === */
 .months-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .month-column {
@@ -84,28 +84,30 @@
   margin: 0.5rem 0;
 }
 
-.month-column li {  
-  font-size: 1.1rem;
+.month-column li {
+  padding: 0.5rem 0;
+  font-size: 1.15rem;
 }
 
+/* Monthly sums */
 .monthly-sum {
   margin-top: 0.8rem;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
 }
 
-/* Combined net */
-.combined-net {
-  margin-top: 2rem;
-  font-size: 1.3rem;
-}
-
-/* Responsive adjustments for larger screens */
-@media (min-width: 700px) {
+/* === RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 700px) {
   .months-container {
-    flex-direction: row;
+    flex-direction: column !important; /* force stacking */
   }
   .month-column {
-    flex: 1;
+    width: 100%;
   }
+}
+
+/* Optional: slightly larger combined net for emphasis */
+.combined-net {
+  margin-top: 2rem;
+  font-size: 1.25rem;
 }
