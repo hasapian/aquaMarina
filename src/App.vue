@@ -24,9 +24,13 @@
     <h2>Records</h2>
     <ul>
       <li v-for="record in records" :key="record.id">
-        {{ record.gains ? 'Income' : 'Expense' }}: ${{ record.amount }} (ID: {{ record.id }})
+        {{ record.gains ? 'Income' : 'Expense' }}: €{{ record.amount }} (ID: {{ record.id }})
       </li>
     </ul>
+    <h2>Monthly Sums (Last 2 Months)</h2>
+    <div v-for="(sum, month) in totals.monthlySums" :key="month">
+      <strong>{{ month }}:</strong> Income: ${{ sum.income }}, Expenses: ${{ sum.expenses }}
+    </div>
   </div>
 </template>
 
