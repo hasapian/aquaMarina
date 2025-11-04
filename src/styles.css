@@ -1,17 +1,29 @@
-/* === GENERAL CONTAINER === */
-.container {
-  max-width: 100%;
-  padding: 1.2rem;
+/* === GENERAL === */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* include padding in width */
+}
+
+body {
+  margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
   font-size: 1.2rem; /* bigger base font */
   line-height: 1.6;
+  overflow-x: hidden; /* prevent horizontal scrolling */
+}
+
+.container {
+  max-width: 100%;
+  padding: 1.2rem;
 }
 
 /* === FORM === */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* more spacing */
+  gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
@@ -27,7 +39,6 @@
   padding: 0.8rem;
   font-size: 1.2rem;
   width: 100%;
-  box-sizing: border-box;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
@@ -62,12 +73,13 @@
 /* === MONTHLY RECORDS === */
 .months-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* mobile-first stacked */
   gap: 1.2rem;
 }
 
 .month-column {
   width: 100%;
+  min-width: 0; /* prevent flex overflow */
   border: 1px solid #ccc;
   padding: 1rem;
   border-radius: 6px;
@@ -96,17 +108,17 @@
   font-size: 1.15rem;
 }
 
-/* === RESPONSIVE ADJUSTMENTS === */
-@media (max-width: 700px) {
+/* === RESPONSIVE ADJUSTMENTS FOR LARGER SCREENS === */
+@media (min-width: 700px) {
   .months-container {
-    flex-direction: column !important; /* force stacking */
+    flex-direction: row;
   }
   .month-column {
-    width: 100%;
+    flex: 1;
   }
 }
 
-/* Optional: slightly larger combined net for emphasis */
+/* Combined net styling */
 .combined-net {
   margin-top: 2rem;
   font-size: 1.25rem;
