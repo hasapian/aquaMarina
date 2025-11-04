@@ -22,18 +22,18 @@
     </div>
 
     <h2>Totals</h2>
-    <p>Total Income: ${{ totals.totalIncome }}</p>
-    <p>Total Expenses: ${{ totals.totalExpenses }}</p>
+    <p>Total Income: €{{ totals.totalIncome.toFixed(2) }}</p>
+    <p>Total Expenses: €{{ totals.totalExpenses.toFixed(2) }}</p>
 
     <h2>Monthly Sums (Last 2 Months)</h2>
     <div v-for="(sum, month) in totals.monthlySums" :key="month">
-      <strong>{{ month }}:</strong> Income: ${{ sum.income }}, Expenses: ${{ sum.expenses }}
+      <strong>{{ month }}:</strong> Income: €{{ sum.income.toFixed(2) }}, Expenses: €{{ sum.expenses.toFixed(2) }}
     </div>
 
-    <h2>Records</h2>
+    <h2>Records (Last 2 Months)</h2>
     <ul>
       <li v-for="record in records" :key="record.id">
-        {{ record.gains ? 'Income' : 'Expense' }}: ${{ record.amount }} ({{ new Date(record.created_at).toLocaleDateString() }})
+        {{ record.gains ? 'Income' : 'Expense' }}: €{{ record.amount.toFixed(2) }} ({{ new Date(record.created_at).toLocaleDateString() }})
       </li>
     </ul>
   </div>

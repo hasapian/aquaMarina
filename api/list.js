@@ -6,6 +6,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 export default async function handler(req, res) {
   try {
+    // Fetch all records
     const { data: records, error } = await supabase
       .from('expenses')
       .select('*')
@@ -14,22 +15,24 @@ export default async function handler(req, res) {
     if (error) return res.status(500).json({ error: error.message })
 
     const now = new Date()
-    const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+    const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
 
+    // Initialize totals and monthly sums
     let totalIncome = 0
     let totalExpenses = 0
     let monthlySums = {}
 
-    // Prepare keys for last 2 months
     const months = [
       new Date(now.getFullYear(), now.getMonth() - 1, 1),
       new Date(now.getFullYear(), now.getMonth(), 1)
     ]
+
     months.forEach(d => {
       const key = d.toLocaleString('default', { month: 'long', year: 'numeric' })
       monthlySums[key] = { income: 0, expenses: 0 }
     })
 
+    // Compute totals and monthly sums
     records.forEach(r => {
       const amount = parseFloat(r.amount)
       const date = new Date(r.created_at)
@@ -44,8 +47,11 @@ export default async function handler(req, res) {
       }
     })
 
+    // Filter records to last 2 months only
+    const filteredRecords = records.filter(r => new Date(r.created_at) >= firstDayLastMonth)
+
     res.status(200).json({
-      records,
+      records: filteredRecords,
       totals: { totalIncome, totalExpenses, monthlySums }
     })
   } catch (err) {
