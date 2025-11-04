@@ -26,13 +26,10 @@
     <p>Total Expenses: €{{ totals.totalExpenses.toFixed(2) }}</p>
     <p>
       Net: €{{ (totals.totalIncome - totals.totalExpenses).toFixed(2) }}
-      — <strong>{{ totals.totalIncome >= totals.totalExpenses ? 'You win!' : 'You lose!' }}</strong>
+      — <strong :style="{ color: totals.totalIncome >= totals.totalExpenses ? 'green' : 'red' }">
+        {{ totals.totalIncome >= totals.totalExpenses ? 'You win!' : 'You lose!' }}
+      </strong>
     </p>
-
-    <h2>Monthly Sums (Last 2 Months)</h2>
-    <div v-for="(sum, month) in totals.monthlySums" :key="month">
-      <strong>{{ month }}:</strong> Income: €{{ sum.income.toFixed(2) }}, Expenses: €{{ sum.expenses.toFixed(2) }}
-    </div>
 
     <h2>Records (Last 2 Months)</h2>
     <div class="months-container">
@@ -43,6 +40,15 @@
             {{ record.gains ? 'Income' : 'Expense' }}: €{{ record.amount.toFixed(2) }} ({{ new Date(record.created_at).toLocaleDateString() }})
           </li>
         </ul>
+        <div class="monthly-sum">
+          <p>
+            Income: €{{ totals.monthlySums[month].income.toFixed(2) }}, 
+            Expenses: €{{ totals.monthlySums[month].expenses.toFixed(2) }}, 
+            Net: <span :style="{ color: totals.monthlySums[month].income >= totals.monthlySums[month].expenses ? 'green' : 'red' }">
+              €{{ (totals.monthlySums[month].income - totals.monthlySums[month].expenses).toFixed(2) }}
+            </span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -116,5 +122,10 @@ export default {
   border: 1px solid #ccc;
   padding: 1rem;
   border-radius: 6px;
+}
+
+.monthly-sum {
+  margin-top: 1rem;
+  font-weight: bold;
 }
 </style>
