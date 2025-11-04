@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="container">
     <h1>Expense Tracker</h1>
 
-    <form @submit.prevent="addExpense">
+    <!-- Add new record form -->
+    <form @submit.prevent="addExpense" class="form">
       <label>
         Type:
         <select v-model="type">
@@ -17,20 +18,25 @@
       <button type="submit">Add</button>
     </form>
 
-    <div v-if="error" style="color:red; margin-top:10px;">
+    <!-- Error -->
+    <div v-if="error" class="error">
       Error: {{ error }}
     </div>
 
-    <h2>Totals</h2>
-    <p>Total Income: €{{ totals.totalIncome.toFixed(2) }}</p>
-    <p>Total Expenses: €{{ totals.totalExpenses.toFixed(2) }}</p>
-    <p>
-      Net: €{{ (totals.totalIncome - totals.totalExpenses).toFixed(2) }}
-      — <strong :style="{ color: totals.totalIncome >= totals.totalExpenses ? 'green' : 'red' }">
-        {{ totals.totalIncome >= totals.totalExpenses ? 'You win!' : 'You lose!' }}
-      </strong>
-    </p>
+    <!-- Totals -->
+    <div class="totals">
+      <h2>Totals</h2>
+      <p>Total Income: €{{ totals.totalIncome.toFixed(2) }}</p>
+      <p>Total Expenses: €{{ totals.totalExpenses.toFixed(2) }}</p>
+      <p>
+        Net: €{{ (totals.totalIncome - totals.totalExpenses).toFixed(2) }}
+        — <strong :style="{ color: totals.totalIncome >= totals.totalExpenses ? 'green' : 'red' }">
+          {{ totals.totalIncome >= totals.totalExpenses ? 'You win!' : 'You lose!' }}
+        </strong>
+      </p>
+    </div>
 
+    <!-- Monthly records -->
     <h2>Records (Last 2 Months)</h2>
     <div class="months-container">
       <div v-for="(recordsList, month) in monthlyRecords" :key="month" class="month-column">
@@ -51,11 +57,20 @@
         </div>
       </div>
     </div>
+
+    <!-- Combined net -->
+    <div class="combined-net">
+      <strong>Combined Net (Last 2 Months): </strong>
+      <span :style="{ color: combinedNet >= 0 ? 'green' : 'red' }">
+        €{{ combinedNet.toFixed(2) }} — {{ combinedNet >= 0 ? 'You win!' : 'You lose!' }}
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import './styles.css'
 
 export default {
   setup() {
@@ -106,26 +121,13 @@ export default {
 
     onMounted(fetchRecords)
 
-    return { type, amount, totals, monthlyRecords, error, addExpense }
+    const combinedNet = computed(() => {
+      return Object.values(totals.value.monthlySums).reduce((sum, month) => {
+        return sum + (month.income - month.expenses)
+      }, 0)
+    })
+
+    return { type, amount, totals, monthlyRecords, error, addExpense, combinedNet }
   }
 }
 </script>
-
-<style>
-.months-container {
-  display: flex;
-  gap: 2rem;
-}
-
-.month-column {
-  flex: 1;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 6px;
-}
-
-.monthly-sum {
-  margin-top: 1rem;
-  font-weight: bold;
-}
-</style>
