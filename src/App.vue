@@ -70,6 +70,7 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue'
+import './styles.css'
 
 export default {
   setup() {
@@ -130,76 +131,3 @@ export default {
   }
 }
 </script>
-
-<style>
-/* Container */
-.container {
-  max-width: 100%;
-  padding: 1rem;
-  font-family: Arial, sans-serif;
-}
-
-/* Form */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.form label {
-  display: flex;
-  flex-direction: column;
-}
-
-.form input,
-.form select,
-.form button {
-  padding: 0.5rem;
-  font-size: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Error */
-.error {
-  color: red;
-  margin-bottom: 1rem;
-}
-
-/* Totals & Combined net */
-.totals p,
-.combined-net {
-  margin: 0.3rem 0;
-  font-size: 1rem;
-}
-
-/* Monthly records */
-.months-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.month-column {
-  width: 100%;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 6px;
-}
-
-.monthly-sum {
-  margin-top: 0.5rem;
-  font-weight: bold;
-}
-
-/* Responsive adjustments (optional for larger screens) */
-@media (min-width: 700px) {
-  .months-container {
-    flex-direction: row;
-  }
-  .month-column {
-    flex: 1;
-  }
-}
-</style>
