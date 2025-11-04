@@ -21,16 +21,21 @@
       Error: {{ error }}
     </div>
 
+    <h2>Totals</h2>
+    <p>Total Income: ${{ totals.totalIncome }}</p>
+    <p>Total Expenses: ${{ totals.totalExpenses }}</p>
+
+    <h2>Monthly Sums (Last 2 Months)</h2>
+    <div v-for="(sum, month) in totals.monthlySums" :key="month">
+      <strong>{{ month }}:</strong> Income: ${{ sum.income }}, Expenses: ${{ sum.expenses }}
+    </div>
+
     <h2>Records</h2>
     <ul>
       <li v-for="record in records" :key="record.id">
-        {{ record.gains ? 'Income' : 'Expense' }}: €{{ record.amount }} (ID: {{ record.id }})
+        {{ record.gains ? 'Income' : 'Expense' }}: ${{ record.amount }} ({{ new Date(record.created_at).toLocaleDateString() }})
       </li>
     </ul>
-    <!-- <h2>Monthly Sums (Last 2 Months)</h2>
-    <div v-for="(sum, month) in totals.monthlySums" :key="month">
-      <strong>{{ month }}:</strong> Income: ${{ sum.income }}, Expenses: ${{ sum.expenses }}
-    </div> -->
   </div>
 </template>
 
@@ -42,13 +47,20 @@ export default {
     const type = ref(true)
     const amount = ref(0)
     const records = ref([])
+    const totals = ref({
+      totalIncome: 0,
+      totalExpenses: 0,
+      monthlySums: {}
+    })
     const error = ref('')
 
     async function fetchRecords() {
       try {
         const res = await fetch('/api/list')
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`)
-        records.value = await res.json()
+        const data = await res.json()
+        records.value = data.records
+        totals.value = data.totals
         error.value = ''
       } catch (err) {
         console.error('Error fetching records:', err)
@@ -79,7 +91,7 @@ export default {
 
     onMounted(fetchRecords)
 
-    return { type, amount, records, addExpense, error }
+    return { type, amount, records, totals, error, addExpense }
   }
 }
 </script>
